@@ -1,0 +1,28 @@
+{
+  "name": "smart-chunks",
+  "version": "0.1.0",
+  "description": "Smart Chunks are intelligently designed to maximize their value as inputs into embedding models.",
+  "main": "smart-chunks.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianpetro/smart-chunks.git"
+  },
+  "keywords": [
+    "embedding",
+    "chunking",
+    "markdown",
+    "parser"
+  ],
+  "author": "Brian Petro (WFH Brian)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brianpetro/smart-chunks/issues"
+  },
+  "homepage": "https://github.com/brianpetro/smart-chunks#readme",
+  "devDependencies": {
+    "ava": "^6.0.1"
+  }
+}

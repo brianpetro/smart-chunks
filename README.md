@@ -1,0 +1,18 @@
+# smart-blocks
+Smart Blocks are intelligently designed chunks used to maximize value of inputs into embedding models.
+
+## installation
+```
+npm install smart-blocks
+```
+
+## usage
+
+`blocks` is an array of objects with the following properties:
+
+- `text`: the text of the block
+- `path`: the path of the block (e.g. `./path/to/file.md#heading1#heading2`)
+- `length`: the length of the block in characters
+
+## about
+Designed for use with [Smart Connections](/brianpetro/obsidian-smart-connections) Obsidian plugin.
