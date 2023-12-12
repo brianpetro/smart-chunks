@@ -8,6 +8,19 @@ npm install smart-blocks
 
 ## usage
 
+### SmartMarkdown
+
+```js
+const { SmartMarkdown } = require('smart-blocks');
+const smart_markdown = new SmartMarkdown(optional_config);
+const blocks = smart_markdown.parse({
+  content: `# Heading 1\ntext\n## Heading 2\ntext`, // some markdown content
+  file_path: './path/to/file.md', // optional: used to improve breadcrumbs (chunk context)
+});
+```
+
+### blocks
+
 `blocks` is an array of objects with the following properties:
 
 - `text`: the text of the block

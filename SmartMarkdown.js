@@ -5,7 +5,7 @@ class SmartMarkdown {
     this.max_len = this.config.max_len || 1000;
     this.min_len = this.config.min_len || 5;
   }
-  parse({ content, file_path }) {
+  parse({ content, file_path='' }) {
     const file_breadcrumbs = this.file_path_to_breadcrumbs(file_path) + ": "; // add ":" to indicate beginning of heading breadcrumbs
     const output = content.split('\n') // split the markdown into lines
       .filter(this.is_content_line) // filter out empty lines and bullets
