@@ -28,4 +28,4 @@ const blocks = smart_markdown.parse({
 - `length`: the length of the block in characters
 
 ## about
-Designed for use with [Smart Connections](/brianpetro/obsidian-smart-connections) Obsidian plugin.
+Designed for use with [Smart Connections](https://smartconnections.app) Obsidian plugin.
