@@ -1,6 +1,6 @@
 {
   "name": "smart-chunks",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Smart Chunks are intelligently designed to maximize their value as inputs into embedding models.",
   "main": "smart-chunks.js",
   "scripts": {
