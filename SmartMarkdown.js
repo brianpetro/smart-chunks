@@ -61,7 +61,7 @@ class SmartMarkdown {
     // breadcrumbs length (first line of block)
     const breadcrumbs_length = acc.curr.indexOf("\n") + 1;
     const block_length = acc.curr.length - breadcrumbs_length;
-    if (acc.curr.length > this.max_len) acc.curr = acc.curr.substring(0, max_len); // trim block to max length
+    if (acc.curr.length > this.max_len) acc.curr = acc.curr.substring(0, this.max_len); // trim block to max length
     acc.blocks.push({ text: acc.curr.trim(), path: acc.block_path, length: block_length });
   }
   is_content_line(line) {
