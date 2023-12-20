@@ -24,3 +24,27 @@ test('SmartMarkdown.parse works without file_path', (t) => {
   t.is(typeof result.file_path, 'string');
   t.true(Array.isArray(result.log));
 });
+
+// retrieves block by path
+test('SmartMarkdown.get_block_by_path retrieves block by path', (t) => {
+  const smart_markdown = new SmartMarkdown({});
+  const block_content = smart_markdown.get_block_from_path("file://folders/test/test.md#test 1", test_md);
+  t.is(block_content, 'lorem ipsum');
+});
+test('SmartMarkdown.get_block_by_path retrieves block by path midway through markdown', (t) => {
+  const smart_markdown = new SmartMarkdown({});
+  const block_content = smart_markdown.get_block_from_path("file://folders/test/test.md#test 1a", test_md);
+  t.is(block_content, 'lorem ipsum 1a');
+});
+// handles {n} in path
+test('SmartMarkdown.get_block_by_path handles {n} in path', (t) => {
+  const smart_markdown = new SmartMarkdown({});
+  const block_content = smart_markdown.get_block_from_path("file://folders/test/test.md#test 1{1}", test_md);
+  t.is(block_content, 'should add bracket to block path for second occurrence of heading');
+});
+// returns full content if lacks headings in path
+test('SmartMarkdown.get_block_by_path returns full content if lacks headings in path', (t) => {
+  const smart_markdown = new SmartMarkdown({});
+  const block_content = smart_markdown.get_block_from_path("file://folders/test/test.md", test_md);
+  t.is(block_content, test_md);
+});

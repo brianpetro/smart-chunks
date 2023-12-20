@@ -4,7 +4,7 @@ Pre-heading text
 lorem ipsum
 
 ## test 1a
-lorem ipsum 
+lorem ipsum 1a
 
 ## test 1b
 lorem ipsum
@@ -28,4 +28,4 @@ lorem ipsum
 lorem ipsum
 
 # test 1
-should add bracket to block path
+should add bracket to block path for second occurrence of heading
