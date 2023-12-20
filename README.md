@@ -1,5 +1,5 @@
-# smart-blocks
-Smart Blocks are intelligently designed chunks used to maximize value of inputs into embedding models.
+# Smart Chunks
+Smart Blocks (chunks) are intelligently designed chunks used to maximize the value of inputs into embedding models.
 
 ## installation
 ```
@@ -11,7 +11,7 @@ npm install smart-blocks
 ### SmartMarkdown
 
 ```js
-const { SmartMarkdown } = require('smart-blocks');
+const { SmartMarkdown } = require('smart-chunks');
 const smart_markdown = new SmartMarkdown(optional_config);
 const blocks = smart_markdown.parse({
   content: `# Heading 1\ntext\n## Heading 2\ntext`, // some markdown content
