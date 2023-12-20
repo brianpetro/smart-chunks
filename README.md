@@ -3,7 +3,7 @@ Smart Blocks (chunks) are intelligently designed chunks used to maximize the val
 
 ## installation
 ```
-npm install smart-blocks
+npm install smart-chunks
 ```
 
 ## usage
