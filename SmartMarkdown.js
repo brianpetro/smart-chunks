@@ -3,8 +3,20 @@ class SmartMarkdown {
     this.config = config;
     this.excluded_headings = (this.config.excluded_headings?.length) ? this.config.excluded_headings.split(",").map((header) => header.trim()) : null;
     this.max_len = this.config.max_len || 1000;
-    this.min_len = this.config.min_len || 5;
+    this.min_len = this.config.min_len || 50;
   }
+  // parse({ content, file_path='' }) {
+  //   const lines = content.split('\n');
+  //   const headings = lines.reduce((acc, line, line_i) => {
+  //     if(!this.is_heading(line)) return acc;
+  //     const chars_until_next_heading = lines.slice(line_i+1).findIndex(line => this.is_heading(line));
+  //     const heading_level = line.split('#').length - 1;
+  //     const heading_text = line.replace(/#/g, '').trim();
+  //     acc.push = {line_i, heading_level, heading_text, chars_until_next_heading};
+  //     return acc;
+  //   }, []);
+  // }
+  // v1
   parse({ content, file_path='' }) {
     const file_breadcrumbs = this.file_path_to_breadcrumbs(file_path) + ": "; // add ":" to indicate beginning of heading breadcrumbs
     const output = content.split('\n') // split the markdown into lines
