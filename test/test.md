@@ -1,31 +1,34 @@
 Pre-heading text
 
 # test 1
-lorem ipsum
+lorem ipsum 1
 
 ## test 1a
 lorem ipsum 1a
 
 ## test 1b
-lorem ipsum
+lorem ipsum 1b
 
 ### test 1b1
-lorem ipsum
+lorem ipsum 1b1
 
 # test 2
-lorem ipsum
+lorem ipsum 2
 
-### test 2a
-lorem ipsum
+## test 2a
+lorem ipsum 2a
 
-## test 2b
-lorem ipsum
+### test 2aa
+lorem ipsum 2aa
+
+### test 2ab
+lorem ipsum 2ab
 
 # test 3
-lorem ipsum
+lorem ipsum 3
 
 ## test 3a
-lorem ipsum
+lorem ipsum 3a
 
 # test 1
 should add bracket to block path for second occurrence of heading
