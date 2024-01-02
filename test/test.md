@@ -30,5 +30,9 @@ lorem ipsum 3
 ## test 3a
 lorem ipsum 3a
 
+# heading only test
+## empty beside headings
+## skip_blocks_with_headings_only should skip this block
+
 # test 1
 should add bracket to block path for second occurrence of heading
