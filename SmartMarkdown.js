@@ -2,8 +2,8 @@ class SmartMarkdown {
   static get defaults() {
     return {
       excluded_headings: null, // comma separated list of headings to exclude
-      max_len: 1000, // max length of block
-      min_len: 50, // min length of block
+      embed_input_max_chars: 1000, // max length of block
+      embed_input_min_chars: 50, // min length of block
       skip_blocks_with_headings_only: false, // skip blocks that only contain headings
     };
   }
@@ -29,8 +29,8 @@ class SmartMarkdown {
     if(!this.validate_block_path(block_path)) return markdown;
     const {
       chars_per_line = null,
-      max_chars = this.config.max_len,
-      min_chars = this.config.min_len,
+      max_chars = this.config.embed_input_max_chars,
+      min_chars = this.config.embed_input_min_chars,
     } = opts;
     const block = [];
     const block_headings = block_path.split("#").slice(1);
@@ -74,7 +74,7 @@ class SmartMarkdown {
       }
     }
     // BUILD BLOCK
-    if (begin_line === 0) return false; // if no begin_line then return false
+    if (begin_line === 0) return ''; // if no begin_line then heading not found
     is_code = false; // iterate through lines starting at begin_line
     for (let i = begin_line; i < lines.length; i++) {
       let line = lines[i];
@@ -97,29 +97,49 @@ class SmartMarkdown {
   }
   parse({ content, file_path='' }) {
     const file_breadcrumbs = this.file_path_to_breadcrumbs(file_path) + ": "; // add ":" to indicate beginning of heading breadcrumbs
+    // if is excalidraw file, block for 'Text Elements' heading only
+    if(file_path.endsWith('.excalidraw.md')) {
+      const excalidraw_block = this.get_block_from_path(file_path + "#Text Elements", content).replace('\n%%', '');
+      return {
+        blocks: [
+          {
+            text: excalidraw_block,
+            path: file_path + "#Text Elements",
+            length: excalidraw_block.length,
+            heading: "Text Elements",
+          }
+        ],
+        log: [],
+      };
+    }
+
     const output = content.split('\n') // split the markdown into lines
-      .filter(this.is_content_line) // filter out empty lines and bullets
       .reduce((acc, line, i, arr) => {
         // if line is a heading or last line
-        if(this.is_heading(line) && (!acc.curr_level || (this.heading_level(line) <= acc.curr_level) || (acc.curr.length > this.config.max_len))){
+        if(this.is_heading(line) && (!acc.curr_level || (this.heading_level(line) <= acc.curr_level) || (acc.curr.length > this.config.embed_input_max_chars))){
           this.output_block(acc);
           acc.curr_level = this.heading_level(line); // get the heading 'level'
           acc.current_headers = acc.current_headers.filter(header => header.level < acc.curr_level); // remove any headers from the current headers array that are higher than the current header level
           acc.current_headers.push({ header: line.replace(/#/g, '').trim(), level: acc.curr_level }); // add header and level to current headers array, trim the header to remove "#" and any trailing spaces
+          acc.start_line = i; // set the start line
           acc.curr = file_breadcrumbs; // initialize the block breadcrumbs with file.path the current headers
           acc.curr += acc.current_headers.map(header => header.header).join(' > ');
           acc.block_headings = "#" + acc.current_headers.map(header => header.header).join('#');
           this.handle_duplicate_headings(acc);
           acc.block_headings_list.push(acc.block_headings);
           acc.block_path = file_path + acc.block_headings;
+          acc.curr_heading = line.replace(/#/g, '').trim();
           return acc;
         }
         // if line is not a heading, add line to current block
         if(acc.curr.indexOf("\n") === -1) acc.curr += ":"; // add ":" to indicate end of heading breadcrumbs
-        acc.curr += "\n" + line;
+        if(this.is_content_line(line)){
+          acc.curr += "\n" + line; // filter out empty lines and bullets
+          acc.curr_line = i; // set the current line
+        }
         if (i === arr.length - 1) this.output_block(acc); // if last line, output the block
         return acc;
-      }, { block_headings: '', block_headings_list: [], block_path: file_path, curr: file_breadcrumbs, current_headers: [], blocks: [], log: [] })
+      }, { block_headings: '', block_headings_list: [], block_path: file_path, curr: file_breadcrumbs, current_headers: [], blocks: [], log: [], start_line: 0, curr_line: 0, curr_heading: null })
     ;
     return {
       ...output,
@@ -143,19 +163,25 @@ class SmartMarkdown {
   }
   // push the current block to the blocks array
   output_block(acc) {
-    const { max_len, min_len } = this.config;
+    const { embed_input_max_chars, embed_input_min_chars } = this.config;
     if(acc.curr.indexOf("\n") === -1) return acc.log.push(`Skipping empty block: ${acc.curr}`); // indicated by no newlines in block
     if(!this.validate_heading(acc.block_headings)) return acc.log.push(`Skipping excluded heading: ${acc.block_headings}`);
-    if(acc.curr.length > max_len) acc.curr = acc.curr.substring(0, max_len); // trim block to max length
+    if(acc.curr.length > embed_input_max_chars) acc.curr = acc.curr.substring(0, embed_input_max_chars); // trim block to max length
     const breadcrumbs_length = acc.curr.indexOf("\n") + 1; // breadcrumbs length (first line of block)
     const block_length = acc.curr.length - breadcrumbs_length;
-    if(block_length < min_len) return acc.log.push(`Skipping block shorter than min length: ${acc.curr}`); // skip if block is shorter than min length
+    if(block_length < embed_input_min_chars) return acc.log.push(`Skipping block shorter than min length: ${acc.curr}`); // skip if block is shorter than min length
     if(this.config.skip_blocks_with_headings_only){ // skip if all lines are headings (except first line which is breadcrumbs)
       const block_lines = acc.curr.split('\n');
       const block_headings = block_lines.slice(1).filter(line => this.is_heading(line));
       if(block_headings.length === block_lines.length - 1) return acc.log.push(`Skipping block with only headings: ${acc.curr}`);
     }
-    acc.blocks.push({ text: acc.curr.trim(), path: acc.block_path, length: block_length, heading: acc.block_headings }); // add block to blocks array
+    acc.blocks.push({
+      text: acc.curr.trim(),
+      path: acc.block_path,
+      length: block_length,
+      heading: acc.curr_heading,
+      lines: [acc.start_line, acc.curr_line],
+    }); // add block to blocks array
   }
   is_content_line(line) {
     if (line === '') return false; // skip if line is empty
