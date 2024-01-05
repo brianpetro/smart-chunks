@@ -132,8 +132,8 @@ class SmartMarkdown {
           return acc;
         }
         // if line is not a heading, add line to current block
-        if(acc.curr.indexOf("\n") === -1) acc.curr += ":"; // add ":" to indicate end of heading breadcrumbs
         if(this.is_content_line(line)){
+          if(acc.curr.indexOf("\n") === -1) acc.curr += ":"; // add ":" to indicate end of heading breadcrumbs
           acc.curr += "\n" + line; // filter out empty lines and bullets
           acc.curr_line = i; // set the current line
         }
