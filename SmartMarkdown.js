@@ -78,7 +78,7 @@ class SmartMarkdown {
     is_code = false; // iterate through lines starting at begin_line
     for (let i = begin_line; i < lines.length; i++) {
       let line = lines[i];
-      if(line.trim().length === 0) continue; // if line is empty, skip
+      // if(line.trim().length === 0) continue; // if line is empty, skip // DO: make this configurable
       if(this.is_heading(line) && (this.heading_level(line) <= block_heading_level)) break; // if line is a heading and heading_level is less than or equal to block_heading_level, break
       // validate/format
       if (chars_per_line && (line.length > chars_per_line)) line = line.slice(0, chars_per_line) + "..."; // limit length of line to N characters
@@ -116,7 +116,7 @@ class SmartMarkdown {
     const output = content.split('\n') // split the markdown into lines
       .reduce((acc, line, i, arr) => {
         // if line is a heading or last line
-        if(this.is_heading(line) && (!acc.curr_level || (this.heading_level(line) <= acc.curr_level) || (acc.curr.length > this.config.embed_input_max_chars))){
+        if(this.is_heading(line) && (!acc.curr_level || !this.config.multi_heading_blocks || (this.heading_level(line) <= acc.curr_level) || (acc.curr.length > this.config.embed_input_max_chars))){
           this.output_block(acc);
           acc.curr_level = this.heading_level(line); // get the heading 'level'
           acc.current_headers = acc.current_headers.filter(header => header.level < acc.curr_level); // remove any headers from the current headers array that are higher than the current header level
@@ -184,7 +184,7 @@ class SmartMarkdown {
     }); // add block to blocks array
   }
   is_content_line(line) {
-    if (line === '') return false; // skip if line is empty
+    // if (line === '') return false; // skip if line is empty // DO: make this configurable
     if (['- ', '- [ ] '].indexOf(line) > -1) return false; // skip if line is empty bullet or checkbox
     return true;
   }
