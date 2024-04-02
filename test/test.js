@@ -1,7 +1,7 @@
 const test = require('ava');
 const path = require('path');
 const fs = require('fs');
-const { SmartMarkdown } = require('../smart-chunks');
+const { SmartMarkdown } = require('../SmartMarkdown');
 // get test.md file
 const test_md_path = path.join(__dirname, 'test.md');
 const test_md = fs.readFileSync(test_md_path, 'utf8');
@@ -13,6 +13,8 @@ test('SmartMarkdown.parse returns an Object contains blocks, file_path and log',
   t.is(typeof result.blocks[0], 'object');
   t.is(typeof result.file_path, 'string');
   t.true(Array.isArray(result.log));
+  t.is(result.blocks[0].path, test_md_path+"#");
+  t.is(result.blocks[1].path, test_md_path+"#test 1");
 });
 // works without file_path
 test('SmartMarkdown.parse works without file_path', (t) => {

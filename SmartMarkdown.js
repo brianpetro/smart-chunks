@@ -139,7 +139,7 @@ class SmartMarkdown {
         }
         if (i === arr.length - 1) this.output_block(acc); // if last line, output the block
         return acc;
-      }, { block_headings: '', block_headings_list: [], block_path: file_path, curr: file_breadcrumbs, current_headers: [], blocks: [], log: [], start_line: 0, curr_line: 0, curr_heading: null })
+      }, { block_headings: '', block_headings_list: [], block_path: file_path + "#", curr: file_breadcrumbs, current_headers: [], blocks: [], log: [], start_line: 0, curr_line: 0, curr_heading: null })
     ;
     return {
       ...output,
